@@ -14,8 +14,14 @@ VERSION: str = "v22.0"
 # also works with edges like media
 FIELDS = "biography,followers_count,follows_count,id,media_count,name,profile_picture_url,username"
 MEDIA = "media{caption,comments_count,id,like_count,media_url,permalink,children}"  # technically "children" is an edge of an edge
-url = f"{BASE_URL}/{VERSION}/me?fields={FIELDS},{MEDIA}&access_token={creds.LONG_LIVED_TOKEN}"
-print(url)
+params = {
+    "fields": f"{FIELDS},{MEDIA}",
+    "access_token": creds.LONG_LIVED_TOKEN
+}
+response_raw = requests.get(f"{BASE_URL}/{VERSION}/me", params=params)
+response_json = json.loads(response_raw.content)
+print(json.dumps(response_json, indent = 4))
+
 
 
 
