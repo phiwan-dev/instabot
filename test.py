@@ -8,6 +8,23 @@ BASE_URL: str = "https://graph.instagram.com"
 VERSION: str = "v22.0"
 
 
+# get long lived access token
+ACCESS_TOKEN_DIR: str = "/access_token"
+GRANT_TYPE: str = "ig_exchange_token"
+access_token_url = f"{BASE_URL}/access_token?grant_type=ig_exchange_token&client_secret={creds.APP_SECRET}&access_token={creds.SHORT_LIVED_TOKEN}"
+#print(access_token_url)
+params = {
+    "grant_type": GRANT_TYPE,
+    "client_secret": creds.APP_SECRET,
+    "access_token": creds.SHORT_LIVED_TOKEN
+}
+#response = requests.get(f"{BASE_URL}{ACCESS_TOKEN_DIR}", params=params)
+#print(response)
+#print(response.content)
+#print(json.loads(response.content))
+
+
+
 # /me
 # query instagram api for "me"-node. can represent various things, here it represents "IG User"
 # all fields for the "IG USER" node (for some reason I cant query some of them): biography,followers_count,follows_count,has_profile_pic,id,is_published,legacy_instagram_user_id,media_count,name,profile_picture_url,shopping_product_tag_eligibility,username,website
