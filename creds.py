@@ -24,3 +24,4 @@ ID: str = ""
 
 
 
+HUGGINGFACE_TOKEN: str = ""
