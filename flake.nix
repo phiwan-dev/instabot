@@ -14,6 +14,15 @@
                 python312
                 (with python312Packages; [
                     requests
+
+                    # flux
+                    huggingface-hub
+                    pillow
+                    torch
+                    diffusers
+                    transformers sentencepiece
+                    accelerate
+                    sympy
                 ])
             ];
         };
