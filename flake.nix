@@ -1,7 +1,8 @@
 {
     description = "Python 3.12 development environment";
 
-    inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    #inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     outputs = { self, nixpkgs }:
     let
@@ -20,9 +21,14 @@
                     pillow
                     torch
                     diffusers
+                    bitsandbytes
                     transformers sentencepiece
                     accelerate
                     sympy
+                    optimum
+
+                    # llm
+                    langchain-ollama
                 ])
             ];
         };
