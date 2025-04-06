@@ -29,6 +29,9 @@
 
                     # llm
                     langchain-ollama
+
+		    # video
+		    ffmpeg-python
                 ])
             ];
         };
