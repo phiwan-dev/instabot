@@ -19,20 +19,18 @@ llm = ChatOllama(model = "gemma3:12b", keep_alive=3, )
 
 rooms_cpy = rooms.copy()
 flux_prompts: list[str] = []
-room = choice(rooms_cpy)
-rooms_cpy.remove(room)
-print(f"\nroom: {room}")
-prompt = llm.invoke(f"you are an interior designer for an instagram page. use {concept=}, {color1=}, {color2=} and {room} to create a flux image generation prompt. only respond with the prompt.")
-print(prompt.content)
-flux_prompts.append(prompt.content)
-prompt = llm.invoke(f"write an instagram caption to a slideset of {concept=}, {color1=}, {color2=}. start philosophical. only respond with the cpation.")
-print(prompt.content)
-prompt = llm.invoke(f"write an instagram commnt to a post about interior design of {concept=}. end with a call to action. only respond with the cpation.")
-print(prompt.content)
+for i in range(10):
+    room = choice(rooms_cpy)
+    rooms_cpy.remove(room)
+    print(f"\nroom: {room}")
+    prompt = llm.invoke(f"you are an interior designer for an instagram page. use {concept=}, {color1=}, {color2=} and {room} to create a flux image generation prompt. only respond with the prompt.")
+    print(prompt.content)
+    flux_prompts.append(prompt.content)
 llm = None
 
 import time
 time.sleep(5)
 flux = Flux()
-flux.get_image(flux_prompts[i], f"images/1.png")
+for i in range(len(flux_prompts)):
+    flux.get_image(flux_prompts[i], f"images/14/{i}.png")
 flux = None
