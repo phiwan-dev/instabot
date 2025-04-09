@@ -10,36 +10,64 @@ colors = ["Cerulean Blue", "Forest Green", "Rose Gold", "Terracotta", "Lavender"
 rooms = ["living room", "bedroom", "kitchen", "bathroom", "dining room", "home office", "entryway", "laundry room", "basement", "attic", "garage", "sunroom", "playroom", "media room", "guest room", "library", "den", "outdoor patio", "balcony", "garden shed"]
 
 
-concept = choice(concepts)
-color1 = choice(colors)
-color2 = choice(colors)
-print(f"concept: {concept}")
-print(f"color: {color1}, {color2}")
+class PostData():
+    def __init__(self, id: int, len: int = 10):
+        self.id: int = id
+        self.len: int = len
+        self.concept: str = ""
+        self.color: str = ""
+        self.rooms: list[str] = [ "" for _ in range(self.len) ]
+        self.flux_prompts: list[str] = [ "" for _ in range(self.len) ]
+        self.caption: str = ""
+        self.comment: str = ""
+    
+    def __repr__(self):
+        return f"""PostData(
+            id={self.id},
+            len={self.len},
+            concept={self.concept},
+            color={self.color},
+            rooms={self.rooms},
+            flux_prompts={self.flux_prompts},
+            caption={self.caption},
+            comment={self.comment}
+        )"""
 
-llm = ChatOllama(model = "gemma3:12b", keep_alive=3, )
+    def __str__(self):
+        return self.__repr__()
 
+
+my_post = PostData(20)
+print(my_post)
+my_post.concept = choice(concepts)
+my_post.color = choice(colors)
 rooms_cpy = rooms.copy()
-chosen_rooms = []
-flux_prompts: list[str] = []
-for i in range(10):
+for i in range(my_post.len):
     room = choice(rooms_cpy)
     rooms_cpy.remove(room)
-    chosen_rooms.append(room)
-    print(f"\nroom: {room}")
-    prompt = llm.invoke(f"you are an interior designer for an instagram page. use {concept=}, {color1=}, {color2=} and {room} to create a flux image generation prompt. only respond with the prompt.")
-    print(prompt.content)
-    flux_prompts.append(prompt.content)
-caption = llm.invoke(f"write an instagram caption to a slideset of {concept=}, {color1=}, {color2=}. start philosophical. only respond with the cpation.")
-print(caption.content)
-comment = llm.invoke(f"write an instagram commnt to a post about interior design of {concept=}. end with a call to action. only respond with the cpation.")
-print(comment.content)
-with open("images/metadata.json", "w") as f:
-    json.dump({"concept": concept, "color1": color1, "color2": color2, "caption": caption.content, "comment": comment.content, "chosen_rooms": chosen_rooms, "flux_prompts": flux_prompts}, f)
+    my_post.rooms[i] = room
+print(my_post)
+
+
+llm = ChatOllama(model = "llama3.2:1b", keep_alive=3, )
+for i in range(my_post.len):
+    print(f"\nroom: {my_post.rooms[i]}")
+    flux_prompt: str = llm.invoke(f"interior design instagram page. use the style concept {my_post.concept}. make it {my_post.color} colored. for the room {my_post.rooms[i]}. create a flux image generation prompt. only respond with the prompt.").content
+    my_post.flux_prompts[i] = flux_prompt
+    print(flux_prompt)
+caption = llm.invoke(f"write an instagram caption to an interior design post with the style concept of {my_post.concept} with the color {my_post.color}. start philosophical. only respond with the cpation.").content
+my_post.caption = caption
+print(caption)
+comment = llm.invoke(f"write an instagram comment to a post about interior design with the {my_post.concept} style concept. end with a call to action. only respond with the caption.").content
+my_post.comment = comment
+print(comment)
+with open(f"images/{my_post.id}/metadata.json", "w") as f:
+    json.dump({"concept": my_post.concept, "color": my_post.color, "caption": my_post.caption, "comment": my_post.comment, "rooms": my_post.rooms, "flux_prompts": my_post.flux_prompts}, f)
 llm = None
 
 import time
 time.sleep(5)
 flux = Flux()
-for i in range(len(flux_prompts)):
-    flux.get_image(flux_prompts[i], f"images/14/{i}.png")
+for i in range(my_post.len):
+    flux.get_image(my_post.flux_prompts[i], f"images/{my_post.id}/{i}.png")
 flux = None
