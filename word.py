@@ -45,7 +45,7 @@ class Post():
             os.makedirs(f"images/{self.id}", exist_ok=True)
 
         with open(f"images/{self.id}/metadata.json", "w") as f:
-            json.dumps({
+            json.dump({
                 "id": self.id,
                 "len": self.len,
                 "concept": self.concept,
@@ -54,17 +54,7 @@ class Post():
                 "flux_prompts": self.flux_prompts,
                 "caption": self.caption,
                 "comment": self.comment
-            })
-
-my_post = Post(20)
-print(my_post)
-my_post.concept = choice(concepts)
-my_post.color = choice(colors)
-rooms_cpy = rooms.copy()
-for i in range(my_post.len):
-    room = choice(rooms_cpy)
-    rooms_cpy.remove(room)
-    my_post.rooms[i] = room
+            }, f)
 print(my_post)
 
 
