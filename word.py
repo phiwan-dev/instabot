@@ -60,18 +60,13 @@ print(my_post)
 
 llm = ChatOllama(model = "llama3.2:1b", keep_alive=3, )
 for i in range(my_post.len):
-    print(f"\nroom: {my_post.rooms[i]}")
-    flux_prompt: str = llm.invoke(f"interior design instagram page. use the style concept {my_post.concept}. make it {my_post.color} colored. for the room {my_post.rooms[i]}. create a flux image generation prompt. only respond with the prompt.").content
-    my_post.flux_prompts[i] = flux_prompt
-    print(flux_prompt)
-caption = llm.invoke(f"write an instagram caption to an interior design post with the style concept of {my_post.concept} with the color {my_post.color}. start philosophical. only respond with the cpation.").content
-my_post.caption = caption
-print(caption)
-comment = llm.invoke(f"write an instagram comment to a post about interior design with the {my_post.concept} style concept. end with a call to action. only respond with the caption.").content
-my_post.comment = comment
-print(comment)
-with open(f"images/{my_post.id}/metadata.json", "w") as f:
-    json.dump({"concept": my_post.concept, "color": my_post.color, "caption": my_post.caption, "comment": my_post.comment, "rooms": my_post.rooms, "flux_prompts": my_post.flux_prompts}, f)
+    my_post.flux_prompts[i]: str = llm.invoke(f"interior design instagram page. use the style concept {my_post.concept}. make it {my_post.color} colored. for the room {my_post.rooms[i]}. create a flux image generation prompt. only respond with the prompt.").content
+    print(my_post.flux_prompts[i])
+my_post.caption = llm.invoke(f"write an instagram caption to an interior design post with the style concept of {my_post.concept} with the color {my_post.color}. start philosophical. only respond with the cpation.").content
+my_post.comment = llm.invoke(f"write an instagram comment to a post about interior design with the {my_post.concept} style concept. end with a call to action. only respond with the caption.").content
+print(my_post.caption)
+print(my_post.comment)
+my_post.save()
 llm = None
 
 import time
