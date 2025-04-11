@@ -55,6 +55,21 @@ class Post():
                 "caption": self.caption,
                 "comment": self.comment
             }, f)
+
+
+    def choose(self) -> None:   # possibly make deterministic with seed
+        self.concept = choice(concepts)
+        self.color = choice(colors)
+        rooms_cpy = rooms.copy()
+        for i in range(my_post.len):
+            room = choice(rooms_cpy)
+            rooms_cpy.remove(room)
+            self.rooms[i] = room
+
+
+
+my_post = Post(20)
+my_post.choose()
 print(my_post)
 
 
