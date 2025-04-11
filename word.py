@@ -12,7 +12,7 @@ rooms = ["living room", "bedroom", "kitchen", "bathroom", "dining room", "home o
 
 
 class Post():
-    def __init__(self, id: int, len: int = 10):
+    def __init__(self, id: int, len: int = 10) -> None:
         self.id: int = id
         self.len: int = len
         self.concept: str = ""
@@ -66,23 +66,25 @@ class Post():
             rooms_cpy.remove(room)
             self.rooms[i] = room
 
+        
+    def generate_text(self) -> None:
+        llm = ChatOllama(model = "gemma3:12b", keep_alive=0, )
+        for i in range(self.len):
+            self.flux_prompts[i]: str = llm.invoke(f"interior design instagram page. use the style concept {self.concept}. make it {self.color} colored. for the room {self.rooms[i]}. create a flux image generation prompt. only respond with the prompt.").content
+            print(self.flux_prompts[i])
+        self.caption = llm.invoke(f"write an instagram caption to an interior design post with the style concept of {self.concept} with the color {self.color}. start philosophical. only respond with the cpation.").content
+        self.comment = llm.invoke(f"write an instagram comment to a post about interior design with the {self.concept} style concept. end with a call to action. only respond with the caption.").content
+
 
 
 my_post = Post(20)
 my_post.choose()
 print(my_post)
-
-
-llm = ChatOllama(model = "llama3.2:1b", keep_alive=3, )
-for i in range(my_post.len):
-    my_post.flux_prompts[i]: str = llm.invoke(f"interior design instagram page. use the style concept {my_post.concept}. make it {my_post.color} colored. for the room {my_post.rooms[i]}. create a flux image generation prompt. only respond with the prompt.").content
-    print(my_post.flux_prompts[i])
-my_post.caption = llm.invoke(f"write an instagram caption to an interior design post with the style concept of {my_post.concept} with the color {my_post.color}. start philosophical. only respond with the cpation.").content
-my_post.comment = llm.invoke(f"write an instagram comment to a post about interior design with the {my_post.concept} style concept. end with a call to action. only respond with the caption.").content
+my_post.generate_text()
 print(my_post.caption)
 print(my_post.comment)
 my_post.save()
-llm = None
+
 
 import time
 time.sleep(5)
