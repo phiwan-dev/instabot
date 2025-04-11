@@ -25,17 +25,16 @@ class Flux:
         )
 
         pipe = FluxPipeline.from_pretrained(
-            "black-forest-labs/FLUX.1-dev",
+            "black-forest-labs/FLUX.1-schnell",
             transformer=transformer_8bit,
             text_encoder_2=text_encoder_2_8bit,
             torch_dtype=torch.float16,
             #device_map="balanced",
         )
         pipe.enable_model_cpu_offload()
-        pipe.to("cuda")
         self.pipe = pipe
 
-    def get_image(self, prompt: str, save_path: str = "images/test.png") -> None:
+    def generate_image(self, prompt: str, save_path: str = "images/test.png") -> None:
         pipe_kwargs = {
             "prompt": prompt,
             "guidance_scale": 3.5,
@@ -49,5 +48,8 @@ class Flux:
         image.save(save_path)
 
 
+    def clear_memory(self) -> None:
+        self.pipe = None
+        torch.cuda.empty_cache()
 
 

@@ -86,9 +86,10 @@ print(my_post.comment)
 my_post.save()
 
 
-import time
-time.sleep(5)
+
+from time import sleep
+sleep(1)
 flux = Flux()
 for i in range(my_post.len):
-    flux.get_image(my_post.flux_prompts[i], f"images/{my_post.id}/{i}.png")
-flux = None
+    flux.generate_image(my_post.flux_prompts[i], f"images/{my_post.id}/{i}.png")
+flux.clear_memory()
