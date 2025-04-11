@@ -68,21 +68,22 @@ class Post():
 
         
     def generate_text(self) -> None:
-        llm = ChatOllama(model = "gemma3:12b", keep_alive=0, )
+        llm = ChatOllama(model = "gemma3:12b", keep_alive=1, )
         for i in range(self.len):
-            self.flux_prompts[i]: str = llm.invoke(f"interior design instagram page. use the style concept {self.concept}. make it {self.color} colored. for the room {self.rooms[i]}. create a flux image generation prompt. only respond with the prompt.").content
-            print(self.flux_prompts[i])
+            self.flux_prompts[i]: str = llm.invoke(f"the goal is to create an instagram post about interior design. think of a room layout for {self.rooms[i]} use the style concept {self.concept} in the color {self.color}. create a flux image generation prompt. only respond with the prompt.").content
+            print(self.flux_prompts[i]+"\n")
         self.caption = llm.invoke(f"write an instagram caption to an interior design post with the style concept of {self.concept} with the color {self.color}. start philosophical. only respond with the cpation.").content
         self.comment = llm.invoke(f"write an instagram comment to a post about interior design with the {self.concept} style concept. end with a call to action. only respond with the caption.").content
 
 
 
-my_post = Post(20)
+my_post = Post(24)
 my_post.choose()
 print(my_post)
 my_post.generate_text()
-print(my_post.caption)
+print(my_post.caption+"\n")
 print(my_post.comment)
+print("\n######\n\n\n")
 my_post.save()
 
 
