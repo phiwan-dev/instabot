@@ -7,7 +7,7 @@
     outputs = { self, nixpkgs }:
     let
         system = "x86_64-linux";
-        pkgs = import nixpkgs { inherit system; config.cudaSupport = true; config.allowUnfree = true; };
+        pkgs = import nixpkgs { inherit system; config.cudaSupport = true; config.cudnnSupport = true; config.allowUnfree = true; };
     in {
         devShells.${system}.default = pkgs.mkShell {
 
@@ -15,6 +15,7 @@
                 cudaPackages.cuda_cudart
                 cudaPackages.cuda_nvcc
                 cudaPackages.cuda_cccl
+                cudaPackages.cudatoolkit
                 linuxPackages.nvidia_x11
             ];
 
@@ -25,25 +26,31 @@
                 export CUDA_VISIBLE_DEVICES=0
 
                 # Path setup
-                export PATH="${pkgs.gcc12}/bin:$PATH"
+                #export PATH="${pkgs.gcc12}/bin:$PATH"
                 export PATH=${pkgs.cudaPackages.cuda_nvcc}/bin:$PATH
 
                 # CUDA setup
-                export CUDAHOSTCXX="${pkgs.gcc12}/bin/g++"
-                export CUDA_HOST_COMPILER="${pkgs.gcc12}/bin/gcc"
+                #export CUDAHOSTCXX="${pkgs.gcc12}/bin/g++"
+                #export CUDA_HOST_COMPILER="${pkgs.gcc12}/bin/gcc"
                 export CUDA_HOME=${pkgs.cudaPackages.cuda_cudart}
                 export CUDA_PATH=${pkgs.cudaPackages.cuda_cudart}
 
                 # Library paths with specific NVIDIA driver
                 export LD_LIBRARY_PATH=${pkgs.linuxPackages.nvidia_x11}/lib
                 export LD_LIBRARY_PATH=${pkgs.cudaPackages.cuda_cudart}/lib64:${pkgs.cudaPackages.cuda_cudart}/lib:$LD_LIBRARY_PATH
-                export LD_LIBRARY_PATH={pkgs.stdenv.cc.cc.lib}/lib:$LD_LIBRARY_PATH
+                export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib:$LD_LIBRARY_PATH
 
                 export LIBRARY_PATH=${pkgs.cudaPackages.cuda_cudart}/lib64:${pkgs.cudaPackages.cuda_cudart}/lib:$LIBRARY_PATH
 
                 # OpenGL driver path
                 export LD_LIBRARY_PATH=${pkgs.linuxPackages.nvidia_x11}/lib:$LD_LIBRARY_PATH
 
+                export TRITON_LIBCUDA_PATH=/run/opengl-driver/lib
+
+                # print shell environment
+                #echo $LD_LIBRARY_PATH | tr ':' '\n'
+                #echo ---
+                #echo $LIBRARY_PATH | tr ':' '\n'
                 nvcc --version
             '';
         };
