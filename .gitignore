@@ -1,5 +1,6 @@
 __pycache__
 .direnv
+.venv
 flux1-schnell
 images
 reel.mp4
