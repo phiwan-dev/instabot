@@ -76,21 +76,20 @@ class Post():
         self.comment = llm.invoke(f"write an instagram comment to a post about interior design with the {self.concept} style concept. end with a call to action. only respond with the caption.").content
 
 
+for j in range(20):
+    my_post = Post(70+j)
+    my_post.choose()
+    print(my_post)
+    my_post.generate_text()
+    print(my_post.caption+"\n")
+    print(my_post.comment)
+    print("\n######\n\n\n")
+    my_post.save()
 
-my_post = Post(24)
-my_post.choose()
-print(my_post)
-my_post.generate_text()
-print(my_post.caption+"\n")
-print(my_post.comment)
-print("\n######\n\n\n")
-my_post.save()
+    sleep(3)
+    flux = Flux()
+    for i in range(my_post.len):
+        flux.generate_image(my_post.flux_prompts[i], f"images/{my_post.id}/{i}.png")
+    flux.clear_memory()
+    sleep(3)
 
-
-
-from time import sleep
-sleep(1)
-flux = Flux()
-for i in range(my_post.len):
-    flux.generate_image(my_post.flux_prompts[i], f"images/{my_post.id}/{i}.png")
-flux.clear_memory()
