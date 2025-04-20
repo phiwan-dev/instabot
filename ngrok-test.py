@@ -1,30 +1,30 @@
-
-# import ngrok python sdk
-import http.server
-import socketserver
-import threading
-import time
-import ngrok
-import time
 import creds
+import time
+from ngrok import ngrok, Listener
+from threading import Thread
+from socketserver import TCPServer
+from http.server import SimpleHTTPRequestHandler
 
-# start server
-PORT = 9000
-handler = http.server.SimpleHTTPRequestHandler
-httpd = socketserver.TCPServer(("", PORT), handler)
-httpd_thread = threading.Thread(target=httpd.serve_forever)
-httpd_thread.start()
+class Publisher():
+
+    def __init__(self, port: int=9000) -> None:
+        self.port: int = port
+        self.listener: Listener | None = None
+        self.url: str | None = ""
+        httpd = TCPServer(("0.0.0.0", self.port), SimpleHTTPRequestHandler)
+        httpd_thread = Thread(target=httpd.serve_forever, daemon=True)
+        httpd_thread.start()
 
 
-# Establish connectivity
-listener = ngrok.forward(9000, authtoken=creds.NGROK_TOKEN)
+    def publish(self) -> str:
+        self.listener = ngrok.forward(self.port, authtoken=creds.NGROK_TOKEN)
+        self.url = self.listener.url()
+        return self.url
 
-# Output ngrok url to console
-print(f"Ingress established at {listener.url()}")
+    
+    def stop(self) -> None:
+        assert self.listener is not None, "Listener has not been initialized!"
+        assert self.url is not None, "URL has not been set!"
+        ngrok.disconnect(self.url)
 
-# Keep the listener alive
-try:
-    while True:
-        time.sleep(1)
-except KeyboardInterrupt:
-    print("Closing listener")
+
