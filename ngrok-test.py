@@ -5,6 +5,7 @@ from threading import Thread
 from socketserver import TCPServer
 from http.server import SimpleHTTPRequestHandler
 
+
 class Publisher():
 
     def __init__(self, port: int=9000) -> None:
@@ -28,3 +29,21 @@ class Publisher():
         ngrok.disconnect(self.url)
 
 
+def test_multiple_publish() -> None:
+    publisher = Publisher()
+    print("Publisher created")
+
+    # first publish
+    url = publisher.publish()
+    print(f"Published to {url}")
+    input("press enter...")
+    publisher.stop()
+    print("Publisher stopped")
+
+    # second publish
+    url = publisher.publish()
+    print(f"Published to {url}")
+    input("press enter...")
+    publisher.stop()
+    print("Publisher stopped")
+    time.sleep(2)
