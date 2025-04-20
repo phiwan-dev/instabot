@@ -25,3 +25,6 @@ ID: str = ""
 
 
 HUGGINGFACE_TOKEN: str = ""
+
+
+NGROK_TOKEN: str = ""
