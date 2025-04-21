@@ -68,6 +68,39 @@ print(json.dumps(response_json, indent = 4))
 
 
 
+# /media
+# This can be used to query your own posts/uploaded media.
+url = f"{BASE_URL}/{VERSION}/{creds.USER_ID}/media?access_token={creds.LONG_LIVED_TOKEN}"
+# story post
+# 1 host image publicly
+if False:
+    from publisher import Publisher
+    publisher = Publisher()
+    url: str = publisher.publish()
+    url = f"{url}/images/0.jpg"
+    print(f"Published to {url}")
+    input("press enter...")
+# 2 create container
+    params = {
+        "access_token": creds.LONG_LIVED_TOKEN,
+        "image_url": url,
+        "media_type": "STORIES",
+    }
+    response_raw = requests.post(f"{BASE_URL}/{VERSION}/{creds.USER_ID}/media", params=params)
+    response_json = json.loads(response_raw.content)
+    print(json.dumps(response_json, indent = 4))
+
+    publisher.stop()
+# 3 publish container
+if False:
+    params = {
+        "access_token": creds.LONG_LIVED_TOKEN,
+        "creation_id": "18061878676876286",
+    }
+    response_raw = requests.post(f"{BASE_URL}/{VERSION}/{creds.USER_ID}/media_publish", params=params)
+    response_json = json.loads(response_raw.content)
+    print(json.dumps(response_json, indent = 4))
+
 
 
 
