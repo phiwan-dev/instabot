@@ -56,6 +56,19 @@ params = {
 
 
 
+# /refresh_access_token
+# returns a json object which inclueds a new refreshed token which is valid for 60 days = 5184000 seconds
+params = {
+    "grant_type": "ig_refresh_token",
+    "access_token": creds.LONG_LIVED_TOKEN,
+}
+response_raw = requests.get(f"{BASE_URL}/{VERSION}/refresh_access_token", params=params)
+response_json = json.loads(response_raw.content)
+print(json.dumps(response_json, indent = 4))
+
+
+
+
 
 
 
