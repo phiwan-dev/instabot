@@ -35,9 +35,27 @@ params = {
     "fields": f"{FIELDS},{MEDIA}",
     "access_token": creds.LONG_LIVED_TOKEN
 }
-response_raw = requests.get(f"{BASE_URL}/{VERSION}/me", params=params)
-response_json = json.loads(response_raw.content)
-print(json.dumps(response_json, indent = 4))
+#response_raw = requests.get(f"{BASE_URL}/{VERSION}/me", params=params)
+#response_json = json.loads(response_raw.content)
+#print(json.dumps(response_json, indent = 4))
+
+
+
+# /debug_token
+# Doesn't work, gives me a permission error. I can't find it in the docs either.
+# Use the online web-tool instead: https://developers.facebook.com/tools/debug/accesstoken/
+# Used to query information about the input token. 
+# Could be used to e.g. see for how long the token is still valid.
+#params = {
+    #"input_token": creds.LONG_LIVED_TOKEN,
+    #"access_token": creds.LONG_LIVED_TOKEN,
+#}
+#response_raw = requests.get(f"{BASE_URL}/{VERSION}/debug_token", params=params)
+#response_json = json.loads(response_raw.content)
+#print(json.dumps(response_json, indent = 4))
+
+
+
 
 
 
