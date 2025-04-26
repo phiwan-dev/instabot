@@ -28,21 +28,23 @@ def hit_endpoint(method: str, endpoint: str, params: dict[str, str], debug: bool
     return response_obj
 
 
+# /access_token
 # get long lived access token
-ACCESS_TOKEN_DIR: str = "/access_token"
-GRANT_TYPE: str = "ig_exchange_token"
-access_token_url = f"{BASE_URL}/access_token?grant_type=ig_exchange_token&client_secret={creds.APP_SECRET}&access_token={creds.SHORT_LIVED_TOKEN}"
-#print(access_token_url)
 params = {
-    "grant_type": GRANT_TYPE,
+    "grant_type": "ig_exchange_token",
     "client_secret": creds.APP_SECRET,
     "access_token": creds.SHORT_LIVED_TOKEN
 }
-#response = requests.get(f"{BASE_URL}{ACCESS_TOKEN_DIR}", params=params)
-#print(response)
-#print(response.content)
-#print(json.loads(response.content))
+#hit_endpoint("GET", "/access_token", params, True)
 
+
+# /refresh_access_token
+# returns a json object which inclueds a new refreshed token which is valid for 60 days = 5184000 seconds
+params = {
+    "grant_type": "ig_refresh_token",
+    "access_token": creds.LONG_LIVED_TOKEN,
+}
+#hit_endpoint("GET", "/refresh_access_token", params, True)
 
 
 # /me
@@ -55,8 +57,7 @@ params = {
     "fields": f"{FIELDS},{MEDIA}",
     "access_token": creds.LONG_LIVED_TOKEN
 }
-hit_endpoint("GET", "/me", params, True)
-
+#hit_endpoint("GET", "/me", params, True)
 
 
 # /debug_token
@@ -64,26 +65,11 @@ hit_endpoint("GET", "/me", params, True)
 # Use the online web-tool instead: https://developers.facebook.com/tools/debug/accesstoken/
 # Used to query information about the input token. 
 # Could be used to e.g. see for how long the token is still valid.
-#params = {
-    #"input_token": creds.LONG_LIVED_TOKEN,
-    #"access_token": creds.LONG_LIVED_TOKEN,
-#}
-#response_raw = requests.get(f"{BASE_URL}/{VERSION}/debug_token", params=params)
-#response_json = json.loads(response_raw.content)
-#print(json.dumps(response_json, indent = 4))
-
-
-
-# /refresh_access_token
-# returns a json object which inclueds a new refreshed token which is valid for 60 days = 5184000 seconds
 params = {
-    "grant_type": "ig_refresh_token",
+    "input_token": creds.LONG_LIVED_TOKEN,
     "access_token": creds.LONG_LIVED_TOKEN,
 }
-#response_raw = requests.get(f"{BASE_URL}/{VERSION}/refresh_access_token", params=params)
-#response_json = json.loads(response_raw.content)
-#print(json.dumps(response_json, indent = 4))
-
+#hit_endpoint("GET", "/debug_token", params, True)
 
 
 # /media
