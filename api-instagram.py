@@ -8,6 +8,26 @@ BASE_URL: str = "https://graph.instagram.com"
 VERSION: str = "v22.0"
 
 
+def hit_endpoint(method: str, endpoint: str, params: dict[str, str], debug: bool = False):
+    if debug:
+        print("=====[Hitting Endpoint]=====")
+        print(f"[Debug]: {method} {BASE_URL}/{VERSION}{endpoint}")
+        print(f"[Debug]: {params}")
+    if method == "GET":
+        response_raw = requests.get(f"{BASE_URL}/{VERSION}{endpoint}", params=params)
+    elif method == "POST":
+        response_raw = requests.post(endpoint, params=params)
+    else:
+        raise ValueError("[Error]: Unsupported! Only GET and POST are supported")
+    response_obj = json.loads(response_raw.content)
+    if debug:
+        print("=====[Response]=====")
+        response_pretty = json.dumps(response_obj, indent=4)
+        print(f"[Debug]: {response_pretty}")
+        print("=====[End Response]=====\n")
+    return response_obj
+
+
 # get long lived access token
 ACCESS_TOKEN_DIR: str = "/access_token"
 GRANT_TYPE: str = "ig_exchange_token"
@@ -35,9 +55,7 @@ params = {
     "fields": f"{FIELDS},{MEDIA}",
     "access_token": creds.LONG_LIVED_TOKEN
 }
-#response_raw = requests.get(f"{BASE_URL}/{VERSION}/me", params=params)
-#response_json = json.loads(response_raw.content)
-#print(json.dumps(response_json, indent = 4))
+hit_endpoint("GET", "/me", params, True)
 
 
 
