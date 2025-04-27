@@ -10,9 +10,9 @@ VERSION: str = "v22.0"
 
 def hit_endpoint(method: str, endpoint: str, params: dict[str, str], debug: bool = False):
     if debug:
-        print("=====[Hitting Endpoint]=====")
+        print(f"=====[Hitting Endpoint {endpoint}]=====")
         print(f"[Debug]: {method} {BASE_URL}/{VERSION}{endpoint}")
-        print(f"[Debug]: {params}")
+        print(f"[Debug]: {json.dumps(params, indent=4)}")
     if method == "GET":
         response_raw = requests.get(f"{BASE_URL}/{VERSION}{endpoint}", params=params)
     elif method == "POST":
@@ -26,6 +26,16 @@ def hit_endpoint(method: str, endpoint: str, params: dict[str, str], debug: bool
         print(f"[Debug]: {response_pretty}")
         print("=====[End Response]=====\n")
     return response_obj
+
+
+def log_stats(username: str="roomrefinery.design") -> None:
+    FIELDS = "followers_count,follows_count,media_count"
+    params = {
+        "fields": f"{FIELDS}",
+        "access_token": creds.LONG_LIVED_TOKEN
+    }
+    hit_endpoint("GET", "/me", params, True)
+log_stats()
 
 
 # /access_token
@@ -54,7 +64,8 @@ params = {
 FIELDS = "biography,followers_count,follows_count,id,media_count,name,profile_picture_url,username"
 MEDIA = "media{caption,comments_count,id,like_count,media_url,permalink,children}"  # technically "children" is an edge of an edge
 params = {
-    "fields": f"{FIELDS},{MEDIA}",
+    "fields": f"{FIELDS}",
+    #"fields": f"{FIELDS},{MEDIA}",
     "access_token": creds.LONG_LIVED_TOKEN
 }
 #hit_endpoint("GET", "/me", params, True)
