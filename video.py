@@ -1,9 +1,20 @@
 
 import ffmpeg
 
-seconds_per_image = 3
+total_lenght: int = 10   # Total length of the video in seconds
+image_count: int = 4     # Number of images to include in the video
+image_framerate: float = image_count / total_lenght
 
 # Define FFmpeg processing
+# main video
+(
+    ffmpeg
+    .input("images/209/*.png", pattern_type="glob", framerate=image_framerate)  # 1 frame per second (each image lasts 1s)
+    .output("reel_main.mp4", vcodec="libx264", r=30, pix_fmt="yuv420p")  # H.264 codec, 30 fps
+    .run(overwrite_output=True)
+)
+
+
 (
     ffmpeg
     .input("images/*.png", pattern_type="glob", framerate=1/seconds_per_image)  # 1 frame per second (each image lasts 1s)
