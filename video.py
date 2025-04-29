@@ -15,9 +15,12 @@ image_framerate: float = image_count / total_lenght
 )
 
 
+# fast intro
+intro_length: int = 2
+image_framerate: float = 5
 (
     ffmpeg
-    .input("images/*.png", pattern_type="glob", framerate=1/seconds_per_image)  # 1 frame per second (each image lasts 1s)
-    .output("reel.mp4", vcodec="libx264", r=30, pix_fmt="yuv420p")  # H.264 codec, 30 fps
+    .input("images/209/*.png", pattern_type="glob", framerate=image_framerate, loop=1)
+    .output("reel_intro.mp4", vcodec="libx264", r=30, pix_fmt="yuv420p", t=intro_length)
     .run(overwrite_output=True)
 )
