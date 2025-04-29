@@ -21,6 +21,13 @@ image_framerate: float = 5
 (
     ffmpeg
     .input("images/209/*.png", pattern_type="glob", framerate=image_framerate, loop=1)
+    # upscale to fix jitter from zoom
+    .filter(
+        'scale',
+        w="5000",
+        h='-1',  # maintain aspect ratio
+        force_original_aspect_ratio='decrease'
+    )
     .filter(
         'zoompan',
         z=f'min(zoom+0.001, 1.9)',          # Zoom factor expression. Constant means zoom TO this level over 'd' frames.
