@@ -1,23 +1,30 @@
 
 import ffmpeg
 
-total_lenght: int = 10   # Total length of the video in seconds
-image_count: int = 4     # Number of images to include in the video
-image_framerate: float = image_count / total_lenght
+# note for variable naming:
+# image = ai generated image
+# frame = video frame
+# length = duration in seconds
+
+output_fps: float = 30
+
+# main part of the video
+main_lenght: int = 10  # Total length of the video
+image_count: int = 4  # Number of ai generated images to include in the video
+images_per_second: float = (image_count / main_lenght)  # 1/the time each image is displayed
 
 # Define FFmpeg processing
 # main video
 (
-    ffmpeg
-    .input("images/209/*.png", pattern_type="glob", framerate=image_framerate)  # 1 frame per second (each image lasts 1s)
-    .output("reel_main.mp4", vcodec="libx264", r=30, pix_fmt="yuv420p")  # H.264 codec, 30 fps
+    ffmpeg.input("images/209/*.png", pattern_type="glob", framerate=images_per_second)
+    .output("reel_main.mp4", vcodec="libx264", r=output_fps, pix_fmt="yuv420p")  # H.264 codec
     .run(overwrite_output=True)
 )
 
 
 # fast intro
-intro_length: int = 2
-image_framerate: float = 5
+intro_length: float = 2
+image_length: float = 0.2
 (
     ffmpeg.input("images/209/*.png", pattern_type="glob", loop=1)
     # upscale to fix jitter from zoom
