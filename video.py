@@ -1,11 +1,13 @@
 
 import ffmpeg
+import os
 
 # note for variable naming:
 # image = ai generated image
 # frame = video frame
 # length = duration in seconds
 
+image_dir: str = os.path.expanduser("~/nextcloud/instabot/images/209")
 output_fps: float = 30
 
 # main part of the video
@@ -16,7 +18,7 @@ images_per_second: float = (image_count / main_lenght)  # 1/the time each image 
 # Define FFmpeg processing
 # main video
 (
-    ffmpeg.input("images/209/*.png", pattern_type="glob", framerate=images_per_second)
+    ffmpeg.input(os.path.join(image_dir, "*.png"), pattern_type="glob", framerate=images_per_second)
     .output("reel_main.mp4", vcodec="libx264", r=output_fps, pix_fmt="yuv420p")  # H.264 codec
     .run(overwrite_output=True)
 )
@@ -26,13 +28,14 @@ images_per_second: float = (image_count / main_lenght)  # 1/the time each image 
 intro_length: float = 2
 image_length: float = 0.2
 (
-    ffmpeg.input("images/209/*.png", pattern_type="glob", loop=1)
+    ffmpeg.input(os.path.join(image_dir, "*.png"), pattern_type="glob", loop=1)
     # upscale to fix jitter from zoom
     .filter(
         "scale",
         w="5000",
         h="-1",  # maintain aspect ratio
     )
+    # zoom across all images, on variable counts output frames
     .filter(
         "zoompan",
         z=f"pow({1.05}, on/{image_count})",
@@ -41,6 +44,6 @@ image_length: float = 0.2
         y="(ih-ih/zoom)/2",
         s="720x1280",
     )
-    .output("reel_intro.mp4", vcodec="libx264", r=30, pix_fmt="yuv420p", t=intro_length)
+    .output("reel_intro.mp4", vcodec="libx264", r=output_fps, pix_fmt="yuv420p", t=intro_length)
     .run(overwrite_output=True)
 )
