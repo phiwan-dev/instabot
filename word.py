@@ -12,7 +12,8 @@ rooms = ["living room", "bedroom", "kitchen", "bathroom", "dining room", "home o
 
 
 class Post():
-    def __init__(self, id: int, len: int = 10) -> None:
+    def __init__(self, id: int, len: int = 10, version: str = "3.0.0") -> None:
+        self.version: str = version
         self.id: int = id
         self.len: int = len
         self.concept: str = ""
@@ -25,6 +26,7 @@ class Post():
 
     def __repr__(self) -> str:
         return f"""PostData(
+            version={self.version},
             id={self.id},
             len={self.len},
             concept={self.concept},
@@ -46,6 +48,7 @@ class Post():
 
         with open(f"images/{self.id}/metadata.json", "w") as f:
             json.dump({
+                "version": self.version,
                 "id": self.id,
                 "len": self.len,
                 "concept": self.concept,
