@@ -41,8 +41,8 @@ class Flux:
             "prompt": prompt,
             "guidance_scale": 3.5,
             "num_inference_steps": 10,
-            "height": 1024,
-            "width": 1024,
+            "height": 1280,
+            "width": 720,
         }
         image = self.pipe(**pipe_kwargs).images[0] # type: ignore
         if not os.path.exists(save_path):
