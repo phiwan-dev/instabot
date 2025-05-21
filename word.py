@@ -5,6 +5,7 @@ from random import choice
 from flux_quantized import Flux
 import json
 import os
+from time import sleep
 
 concepts = ["Bohemian Rhapsody", "Mid-Century Modern", "Coastal Farmhouse", "Industrial Loft", "Scandinavian Hygge", "Hollywood Regency", "Tropical Maximalism", "Moroccan Oasis", "Art Deco Glamour", "French Country Cottage", "Contemporary Minimalism", "Japanese Wabi-Sabi", "Rustic Industrial", "Shabby Chic Romance", "Nautical Explorer", "Urban Zen", "Victorian Gothic", "Eclectic Fusion", "Global Nomad", "Desert Serenity", "Prairie Revival", "English Manor", "Mediterranean Villa", "Southwestern Adobe", "Art Nouveau Flow", "Dark Academia", "Japandi Harmony", "Biophilic Design", "Coastal Grandmother", "Dark Romantic", "Modern Organic", "Transitional Style", "Grandmillennial", "New Traditional", "Hollywood Glam", "Rustic Modern", "Minimalist Maximalism", "Coastal Contemporary", "Urban Farmhouse", "French Provincial", "Scandinavian Modern", "Tropical Modern", "Moroccan Contemporary", "Art Deco Revival", "Rustic Scandinavian", "Shabby Bohemian", "Nautical Modern", "Industrial Farmhouse", "Victorian Modern", "Eclectic Maximalism", "Global Contemporary", "Desert Modern", "Prairie Chic", "English Country", "Mediterranean Contemporary", "Southwestern Contemporary", "Art Nouveau Revival", "Japandi Rustic", "Biophilic Maximalism", "Coastal Luxe", "Dark Victorian", "Modern Farmhouse", "Transitional Contemporary", "Grandmillennial Modern", "Hollywood Regency Revival", "Rustic Bohemian", "Minimalist Organic", "Coastal Vintage", "Nautical Chic", "Industrial Vintage", "Victorian Eclectic", "Eclectic Traditional", "Global Luxe", "Desert Contemporary", "Prairie Traditional", "English Victorian", "Mediterranean Rustic", "Southwestern Modern", "Art Deco Modern", "Japandi Contemporary", "Biophilic Contemporary", "Coastal Glam", "Dark Traditional", "Modern Rustic", "Transitional Rustic", "Grandmillennial Luxe", "Hollywood Glam", "Rustic Luxe", "Minimalist Bohemian", "Coastal Industrial", "Nautical Traditional", "Industrial Chic Revival", "Victorian Grand Revival", "Eclectic Bohemian", "Global Contemporary", "Desert Luxe", "Prairie Modern Revival", "English Modern", "Mediterranean Contemporary", "Southwestern Contemporary", "Art Nouveau Contemporary", "Japandi Luxe", "Biophilic Rustic", "Coastal Traditional", "Dark Modern", "Modern Victorian", "Transitional Modern", "Grandmillennial Chic", "Hollywood Regency", "Rustic Contemporary", "Minimalist Contemporary", "Coastal Vintage", "Nautical Modern", "Industrial Modern", "Victorian Traditional", "Eclectic Modern", "Global Rustic", "Desert Contemporary Revival", "Prairie Chic Revival", "English Traditional Revival", "Mediterranean Modern Revival", "Southwestern Contemporary Revival", "Art Nouveau Modern Revival", "Japandi Traditional Revival", "Biophilic Contemporary Revival"]
 colors = ["Cerulean Blue", "Forest Green", "Rose Gold", "Terracotta", "Lavender", "Charcoal Grey", "Mustard Yellow", "Coral Pink", "Slate Blue", "Olive Drab", "Burgundy Wine", "Seafoam Green", "Peach Melba", "Taupe", "Indigo", "Crimson", "Silver Sage", "Goldenrod", "Periwinkle", "Bronze", "Amethyst Purple", "Hunter Green", "Dusty Rose", "Saffron", "Cobalt", "Jade", "Magnolia", "Copper", "Lilac", "Pine Green", "Apricot", "Steel Grey", "Orchid", "Emerald", "Cream", "Brick Red", "Sky Blue", "Beige", "Plum", "Teal", "Sand", "Marigold", "Aqua", "Russet", "Mauve", "Chartreuse", "Navy Blue", "Caramel", "Viridian", "Champagne", "Fuchsia", "Ochre", "Royal Blue", "Butterscotch", "Lime Green", "Pearl White", "Deep Purple", "Ginger", "Turquoise", "Tan", "Electric Blue", "Honey", "Fern Green", "Ivory", "Wineberry", "Cinnamon", "Sapphire", "Stone Grey", "Lemon Yellow", "Mint Green", "Slate Grey", "Rosewood", "Pineapple", "Midnight Blue", "Shadow Grey", "Coral Reef", "Basil", "Antique White", "Oxblood", "Golden Honey", "Sea Glass", "Dusty Lavender", "Desert Sand", "Royal Purple", "Moss Green", "Peach Blossom", "Silver Birch", "Deep Teal", "Warm Grey", "Electric Lime", "Soft Peach", "Midnight Emerald", "Slate Teal", "Dusty Rose Pink", "Olive Branch", "Pale Gold", "Ocean Blue", "Copper Penny", "Lilac Grey", "Forest Olive", "Apricot Orange", "Royal Azure", "Shadow Plum", "Lemon Chiffon", "Seafoam Aqua", "Warm Terracotta", "Antique Gold", "Deep Indigo", "Spring Green", "Silver Grey", "Rose Quartz", "Bronze Copper", "Amethyst Smoke", "Hunter Teal", "Dusty Coral", "Saffron Spice", "Cobalt Sky", "Jade Forest", "Magnolia Bloom", "Pearl Shimmer", "Wineberry Swirl", "Cinnamon Bark", "Sapphire Dusk", "Stone Whisper", "Lemon Zest", "Mint Julep", "Slate Mist", "Rosewood Brown", "Pineapple Sorbet", "Royal Violet", "Shadow Teal", "Spring Meadow", "Silver Lining", "Rose Petal", "Bronze Age", "Amethyst Dream", "Hunter Teal", "Dusty Coral", "Saffron Glow", "Cobalt Mist", "Jadeite Green", "Magnolia Silk", "Pearl Essence", "Wineberry Blush", "Cinnamon Swirl", "Sapphire Velvet", "Stone Serenity"]
@@ -22,6 +23,7 @@ class Post():
         self.flux_prompts: list[str] = [ "" for _ in range(self.len) ]
         self.caption: str = ""
         self.comment: str = ""
+        self.transcript: str = ""
     
 
     def __repr__(self) -> str:
@@ -34,7 +36,8 @@ class Post():
             rooms={self.rooms},
             flux_prompts={self.flux_prompts},
             caption={self.caption},
-            comment={self.comment}
+            comment={self.comment},
+            transcript={self.transcript}
         )"""
 
 
@@ -56,6 +59,9 @@ class Post():
                 "rooms": self.rooms,
                 "flux_prompts": self.flux_prompts,
                 "caption": self.caption,
+                "comment": self.comment,
+                "transcript": self.transcript
+            }, f, indent=4)
 
 
     def load(self, path: str) -> None:
@@ -71,6 +77,7 @@ class Post():
             self.flux_prompts = data["flux_prompts"]
             self.caption = data["caption"]
             self.comment = data["comment"]
+            self.transcript = data["transcript"]
 
 
     def choose(self) -> None:   # possibly make deterministic with seed
@@ -86,14 +93,15 @@ class Post():
     def generate_text(self) -> None:
         llm = ChatOllama(model = "gemma3:12b", keep_alive=1, )
         for i in range(self.len):
-            self.flux_prompts[i]: str = llm.invoke(f"the goal is to create an instagram post about interior design. think of a room layout for {self.rooms[i]} use the style concept {self.concept} in the color {self.color}. create a flux image generation prompt. only respond with the prompt.").content
+            self.flux_prompts[i] = str(llm.invoke(f"the goal is to create an instagram post about interior design. think of a room layout for {self.rooms[i]} use the style concept {self.concept} in the color {self.color}. create a flux image generation prompt. only respond with the prompt.").content)
             print(self.flux_prompts[i]+"\n")
-        self.caption = llm.invoke(f"write an instagram caption to an interior design post with the style concept of {self.concept} with the color {self.color}. start philosophical. only respond with the cpation.").content
-        self.comment = llm.invoke(f"write an instagram comment to a post about interior design with the {self.concept} style concept. end with a call to action. only respond with the caption.").content
+        self.caption = str(llm.invoke(f"write an instagram caption to an interior design post with the style concept of {self.concept} with the color {self.color}. start philosophical. only respond with the cpation.").content)
+        self.comment = str(llm.invoke(f"write an instagram comment to a post about interior design with the {self.concept} style concept. end with a call to action. only respond with the caption.").content)
+        self.transcript = str(llm.invoke(f"i want to make a short form video on instagram reels about interior design. the post is about the style {self.concept} in the color {self.color}. give me a short text about the topic which i can read and use as audio. open with a hook. only respond with the transcript. do NOT include anything besides the spoken words!").content)
 
 
 for j in range(20):
-    my_post = Post(70+j)
+    my_post = Post(210+j)
     my_post.choose()
     print(my_post)
     my_post.generate_text()
