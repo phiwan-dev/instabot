@@ -11,16 +11,14 @@ image_dir: str = os.path.expanduser("~/nextcloud/instabot/images/209")
 output_fps: float = 30
 
 # main part of the video
-main_lenght: int = 10  # Total length of the video
-image_count: int = 4  # Number of ai generated images to include in the video
-images_per_second: float = (image_count / main_lenght)  # 1/the time each image is displayed
-image_length: float = main_lenght / image_count
+main_lenght: int = 22-2     # length of the main part of the reel
+image_length: float = 2.0   # duration of each image is displayed
 zoom_level: float = 1.001
 
 # Define FFmpeg processing
 # main video
 (
-    ffmpeg.input(os.path.join(image_dir, "*.png"), pattern_type="glob")
+    ffmpeg.input(os.path.join(image_dir, "*.png"), pattern_type="glob", loop=1)
     # upscale to fix jitter from zoom
     .filter(
         "scale",
@@ -34,7 +32,7 @@ zoom_level: float = 1.001
             x="iw/2-(iw/zoom/2)",
             y="ih/2-(ih/zoom/2)",
             s="720x1280")
-    .output("reel_main.mp4", vcodec="libx264", r=output_fps, pix_fmt="yuv420p")  # H.264 codec
+    .output("reel_main.mp4", vcodec="libx264", r=output_fps, pix_fmt="yuv420p", t=main_lenght)  # H.264 codec
     .run(overwrite_output=True)
 )
 
