@@ -53,8 +53,21 @@ class Post():
                 "rooms": self.rooms,
                 "flux_prompts": self.flux_prompts,
                 "caption": self.caption,
-                "comment": self.comment
-            }, f)
+
+
+    def load(self, path: str) -> None:
+        assert os.path.exists(path), f"Post at {path} not found."
+        with open(path, "r") as f:
+            data = json.load(f)
+            self.version = data["version"]
+            self.id = data["id"]
+            self.len = data["len"]
+            self.concept = data["concept"]
+            self.color = data["color"]
+            self.rooms = data["rooms"]
+            self.flux_prompts = data["flux_prompts"]
+            self.caption = data["caption"]
+            self.comment = data["comment"]
 
 
     def choose(self) -> None:   # possibly make deterministic with seed
