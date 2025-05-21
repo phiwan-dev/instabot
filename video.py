@@ -62,3 +62,18 @@ image_length = 0.2
     .output("reel_intro.mp4", vcodec="libx264", r=output_fps, pix_fmt="yuv420p", t=intro_length)
     .run(overwrite_output=True)
 )
+
+
+
+intro = ffmpeg.input("reel_intro.mp4")
+main = ffmpeg.input("reel_main.mp4")
+video = ffmpeg.concat(intro, main, v=1, a=0)
+audio = ffmpeg.input("audio/af_bella.wav")
+ffmpeg.output(video,
+    audio.audio, 
+    'reel_total.mp4', 
+    shortest=None,  # Stops encoding when the shortest input ends
+    vcodec="libx264",  # Avoid re-encoding video
+    acodec='aac'    # Encode audio to AAC
+).run(overwrite_output=True)
+
