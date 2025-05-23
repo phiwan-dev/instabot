@@ -84,7 +84,7 @@ class Post():
         self.concept = choice(concepts)
         self.color = choice(colors)
         rooms_cpy = rooms.copy()
-        for i in range(my_post.len):
+        for i in range(self.len):
             room = choice(rooms_cpy)
             rooms_cpy.remove(room)
             self.rooms[i] = room
@@ -97,23 +97,23 @@ class Post():
             print(self.flux_prompts[i]+"\n")
         self.caption = str(llm.invoke(f"write an instagram caption to an interior design post with the style concept of {self.concept} with the color {self.color}. start philosophical. only respond with the cpation.").content)
         self.comment = str(llm.invoke(f"write an instagram comment to a post about interior design with the {self.concept} style concept. end with a call to action. only respond with the caption.").content)
-        self.transcript = str(llm.invoke(f"i want to make a short form video on instagram reels about interior design. the post is about the style {self.concept} in the color {self.color}. give me a short text about the topic which i can read and use as audio. open with a hook. only respond with the transcript. do NOT include anything besides the spoken words!").content)
+        self.transcript = str(llm.invoke(f"I want to write a short post about interior design. The post is about the style {self.concept} in the color {self.color}. Give me a short text about the topic. Open with a hook. Only respond with the text. Do NOT include anything besides the written words!").content)
 
+if __name__ == "__main__":
+    for j in range(20):
+        my_post = Post(210+j)
+        my_post.choose()
+        print(my_post)
+        my_post.generate_text()
+        print(my_post.caption+"\n")
+        print(my_post.comment)
+        print("\n######\n\n\n")
+        my_post.save()
 
-for j in range(20):
-    my_post = Post(210+j)
-    my_post.choose()
-    print(my_post)
-    my_post.generate_text()
-    print(my_post.caption+"\n")
-    print(my_post.comment)
-    print("\n######\n\n\n")
-    my_post.save()
-
-    sleep(3)
-    flux = Flux()
-    for i in range(my_post.len):
-        flux.generate_image(my_post.flux_prompts[i], f"images/{my_post.id}/{i}.png")
-    flux.clear_memory()
-    sleep(3)
+        sleep(3)
+        flux = Flux()
+        for i in range(my_post.len):
+            flux.generate_image(my_post.flux_prompts[i], f"images/{my_post.id}/{i}.png")
+        flux.clear_memory()
+        sleep(3)
 
