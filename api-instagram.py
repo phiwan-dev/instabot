@@ -86,6 +86,18 @@ params = {
 # /media
 # This can be used to query your own posts/uploaded media.
 url = f"{BASE_URL}/{VERSION}/{creds.USER_ID}/media?access_token={creds.LONG_LIVED_TOKEN}"
+## create carusel children conteainers (each slide)
+#IMAGE_URL: list[str] = [ ... ]
+#for i in range(len(IMAGE_URL)):
+    #url = f"{BASE_URL}/{VERSION}/{creds.USER_ID}/media?image_url={IMAGE_URL[i]}&is_carousel_item=true&access_token={creds.LONG_LIVED_TOKEN}"
+    #response = requests.post(url)
+    #print(response.content)
+#response_id: list[str] = [ ... ]
+## create carousel container
+#CAPTION = "The pursuit of perfection often obscures the profound beauty of imperfection. This kitchen, a study in Wabi-Sabi, whispers a lesson: true elegance resides not in flawless surfaces, but in the quiet dignity of the weathered clay, the gentle curve of the handcrafted sink. It’s a space to contemplate the transient nature of beauty, and to find solace in the simple act of being. 🍵✨ What does 'beauty' mean to you? 👇 #wabisabi #interiordesign #claykitchen #japanesedesign #slowliving"
+#url = f"{BASE_URL}/{VERSION}/{creds.USER_ID}/media?media_type=CAROUSEL&caption={CAPTION}&&access_token={creds.LONG_LIVED_TOKEN}"
+
+
 # story post
 # 1 host image publicly
 if False:
