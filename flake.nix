@@ -1,8 +1,9 @@
 {
     description = "Cuda development environment. Can be used with the python uv package manager to imperatively install packages like pytorch.";
 
-    #inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";       Uses the cuda driver installed on the system, hence commented out.
-    #inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";    Forcing a specific version will likely result in conflicts!
+    # pin packages to 25.05 because that is what my system uses.
+    # If on unstable, simply uncomment this line and you system packages will be used.
+    inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";        
 
     outputs = { self, nixpkgs }:
     let
@@ -12,11 +13,11 @@
         devShells.${system}.default = pkgs.mkShell {
 
             buildInputs = with pkgs; [
-                cudaPackages.cuda_cudart
-                cudaPackages.cuda_nvcc
-                cudaPackages.cuda_cccl
-                cudaPackages.cudatoolkit
-                linuxPackages.nvidia_x11
+                #cudaPackages.cuda_cudart
+                #cudaPackages.cuda_nvcc
+                #cudaPackages.cuda_cccl
+                #cudaPackages.cudatoolkit
+                #linuxPackages.nvidia_x11
             ];
 
             shellHook = ''
@@ -51,7 +52,8 @@
                 #echo $LD_LIBRARY_PATH | tr ':' '\n'
                 #echo ---
                 #echo $LIBRARY_PATH | tr ':' '\n'
-                nvcc --version
+                #nvcc --version
+                nvidia-smi --version
             '';
         };
     };
